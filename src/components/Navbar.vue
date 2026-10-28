@@ -96,4 +96,27 @@ defineExpose({ incrementarDocumentos, docCount })
   font-weight: bold;
   cursor: pointer;
 }
-</style>      
+
+/* RESPONSIVE NAVBAR */
+@media (max-width: 768px) {
+  .navbar {
+    height: auto;
+    padding: 10px 16px;
+  }
+  .main-title {
+    font-size: 14px;
+  }
+  .subtitle {
+    font-size: 11px;
+  }
+  .logo {
+    width: 35px;
+    height: 35px;
+  }
+  .counter-btn {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+</style> 
+     
