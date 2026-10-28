@@ -37,5 +37,5 @@ body {
 html, body {
   overflow-x: hidden;
   background-color: #f9fafb;
-}c
+}
 </style>
