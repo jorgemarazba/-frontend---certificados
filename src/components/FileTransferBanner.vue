@@ -12,7 +12,6 @@
       </div>
       <div class="endpoint-meta">
         <span class="endpoint-label">Dispositivo</span>
-        <span class="endpoint-sub">Emisión: 1 doc / min</span>
       </div>
     </div>
 
@@ -43,7 +42,6 @@
       </div>
       <div class="endpoint-meta text-right">
         <span class="endpoint-label">Bóveda Segura</span>
-        <span class="endpoint-sub text-emerald-600">Almacenamiento Cifrado</span>
       </div>
     </div>
   </div>

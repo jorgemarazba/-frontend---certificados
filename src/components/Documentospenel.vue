@@ -14,76 +14,6 @@
             </div>
           </div>
 
-          <!-- GRÁFICO 3D: Gráfico Donut Isométrico con Profundidad y Sombras -->
-          <div class="chart-3d-wrapper">
-            <div class="chart-3d-scene">
-              <!-- SVG Donut 3D con perspectiva e iluminación -->
-              <svg class="donut-3d-svg" viewBox="0 0 160 160">
-                <defs>
-                  <filter id="depth-shadow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#0a2a5e" flood-opacity="0.25" />
-                  </filter>
-                  <linearGradient id="grad-guardados" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#22c55e" />
-                    <stop offset="100%" stop-color="#15803d" />
-                  </linearGradient>
-                  <linearGradient id="grad-enviados" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#3b82f6" />
-                    <stop offset="100%" stop-color="#1d4ed8" />
-                  </linearGradient>
-                  <linearGradient id="grad-pendientes" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#f59e0b" />
-                    <stop offset="100%" stop-color="#b45309" />
-                  </linearGradient>
-                </defs>
-
-                <!-- Anillo base con sombra 3D -->
-                <circle cx="80" cy="80" r="58" fill="none" stroke="#f1f5f9" stroke-width="16" />
-                
-                <!-- Segmento Guardados (Verde) -->
-                <circle
-                  cx="80" cy="80" r="58" fill="none"
-                  stroke="url(#grad-guardados)" stroke-width="16"
-                  stroke-dasharray="145 365"
-                  stroke-dashoffset="0"
-                  stroke-linecap="round"
-                  filter="url(#depth-shadow)"
-                />
-
-                <!-- Segmento Enviados (Azul) -->
-                <circle
-                  cx="80" cy="80" r="58" fill="none"
-                  stroke="url(#grad-enviados)" stroke-width="16"
-                  stroke-dasharray="110 365"
-                  stroke-dashoffset="-155"
-                  stroke-linecap="round"
-                />
-
-                <!-- Segmento Pendientes (Dorado) -->
-                <circle
-                  cx="80" cy="80" r="58" fill="none"
-                  stroke="url(#grad-pendientes)" stroke-width="16"
-                  stroke-dasharray="55 365"
-                  stroke-dashoffset="-275"
-                  stroke-linecap="round"
-                />
-              </svg>
-
-              <!-- Núcleo central del gráfico 3D -->
-              <div class="chart-center-hub">
-                <span class="hub-count">{{ totalDocs }}</span>
-                <span class="hub-label">Activos</span>
-              </div>
-            </div>
-
-            <!-- Leyenda visual de segmentos -->
-            <div class="chart-legend-3d">
-              <span class="leg-pill pill-green"><span class="dot"></span> {{ guardados }} Guardados</span>
-              <span class="leg-pill pill-blue"><span class="dot"></span> {{ enviados }} Enviados</span>
-              <span class="leg-pill pill-amber"><span class="dot"></span> {{ pendientes }} Pendientes</span>
-            </div>
-          </div>
-
           <!-- GRÁFICO 3D: Barras Isométricas con Espaciado Generoso -->
           <div class="bar-chart-3d-box">
             <div class="bar-chart-header">
@@ -349,7 +279,7 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="(doc, i) in documentosFiltrados" :key="doc.id || i" class="table-row-pro">
+              <tr v-for="(doc, i) in documentosPaginados" :key="doc.id || i" class="table-row-pro">
                 <!-- Documento SIN iconos (limpio) -->
                 <td class="td-doc-name">
                   <span class="doc-text-name">{{ doc.nombre }}</span>
@@ -371,29 +301,39 @@
                   </span>
                 </td>
 
-                <!-- BOTONES DE ACCIONES (EDITAR Y ELIMINAR) -->
+                <!-- BOTONES DE ACCIONES (SOLO ICONOS) -->
                 <td class="td-actions">
                   <div class="actions-group">
+                    <!-- BOTÓN VISUALIZAR DOCUMENTO (TAMAÑO A4) -->
                     <button
-                      class="btn-action btn-edit"
-                      @click="abrirEditar(doc, i)"
+                      class="btn-action-icon btn-view-icon"
+                      @click="abrirVisualizar(doc)"
+                      title="Visualizar documento en tamaño A4 completo"
+                    >
+                      <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z" />
+                        <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd" />
+                      </svg>
+                    </button>
+
+                    <button
+                      class="btn-action-icon btn-edit-icon"
+                      @click="abrirEditar(doc)"
                       title="Editar y gestionar documento"
                     >
                       <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                       </svg>
-                      <span>Editar</span>
                     </button>
 
                     <button
-                      class="btn-action btn-delete"
-                      @click="eliminarDoc(i)"
+                      class="btn-action-icon btn-delete-icon"
+                      @click="eliminarDoc(doc)"
                       title="Eliminar este documento"
                     >
                       <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
                       </svg>
-                      <span>Eliminar</span>
                     </button>
                   </div>
                 </td>
@@ -411,8 +351,172 @@
               </tr>
             </tbody>
           </table>
+
+          <!-- BARRA DE PAGINACIÓN PROFESIONAL -->
+          <div class="pagination-container-pro" v-if="documentosFiltrados.length > 0">
+            <!-- Información de rango -->
+            <div class="pagination-info">
+              <span>Mostrando</span>
+              <span class="pagination-highlight">{{ indiceInicio + 1 }} - {{ Math.min(indiceFin, documentosFiltrados.length) }}</span>
+              <span>de</span>
+              <span class="pagination-highlight">{{ documentosFiltrados.length }}</span>
+              <span>documentos</span>
+            </div>
+
+            <!-- Selector de cantidad por página -->
+            <div class="pagination-size-selector">
+              <span class="size-label">Filas por página:</span>
+              <select v-model="itemsPorPagina" class="select-per-page" @change="cambiarItemsPorPagina">
+                <option :value="3">3</option>
+                <option :value="5">5</option>
+                <option :value="10">10</option>
+              </select>
+            </div>
+
+            <!-- Controles de navegación y números -->
+            <div class="pagination-controls">
+              <!-- Botón Anterior -->
+              <button
+                class="btn-page-nav"
+                :disabled="paginaActual === 1"
+                @click="irAPagina(paginaActual - 1)"
+                title="Página anterior"
+              >
+                ‹ Anterior
+              </button>
+
+              <!-- Números de página -->
+              <div class="page-numbers-group">
+                <button
+                  v-for="pag in totalPaginas"
+                  :key="pag"
+                  :class="['btn-page-number', paginaActual === pag ? 'page-active' : '']"
+                  @click="irAPagina(pag)"
+                >
+                  {{ pag }}
+                </button>
+              </div>
+
+              <!-- Botón Siguiente -->
+              <button
+                class="btn-page-nav"
+                :disabled="paginaActual === totalPaginas"
+                @click="irAPagina(paginaActual + 1)"
+                title="Página siguiente"
+              >
+                Siguiente ›
+              </button>
+            </div>
+          </div>
         </div>
       </main>
+    </div>
+
+    <!-- MODAL PROFESIONAL: VISUALIZADOR DE DOCUMENTO EN FORMATO A4 COMPLETO -->
+    <div v-if="mostrarModalVisualizar && docVisualizando" class="modal-backdrop modal-a4-backdrop" @click.self="mostrarModalVisualizar = false">
+      <div class="a4-viewer-container">
+        <!-- Barra superior flotante de acciones del visor A4 -->
+        <div class="a4-viewer-header">
+          <div class="a4-header-left">
+            <span class="a4-doc-badge">DOCUMENTO OFICIAL A4</span>
+            <span class="a4-doc-title">{{ docVisualizando.nombre }}</span>
+            <span :class="['status-badge', getStatusClass(docVisualizando.estado)]">
+              <span class="status-dot"></span>
+              {{ docVisualizando.estado }}
+            </span>
+          </div>
+          <div class="a4-header-actions">
+            <button class="btn-a4-action" @click="imprimirDocumento" title="Imprimir documento">
+              <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
+              </svg>
+              <span>Imprimir</span>
+            </button>
+            <button class="a4-close-btn" @click="mostrarModalVisualizar = false" title="Cerrar visor">✕</button>
+          </div>
+        </div>
+
+        <!-- Área de desplazamiento del pliego A4 -->
+        <div class="a4-sheet-scroll-area">
+          <!-- HOJA REALISTA CON DIMENSIONES Y PROPORCIONES A4 (1 : 1.414) -->
+          <div class="a4-paper-page">
+            <!-- Marca de agua de seguridad -->
+            <div class="a4-watermark">VAULT ARCHIMENT</div>
+
+            <!-- Membrete oficial -->
+            <div class="a4-official-header">
+              <div class="a4-header-emblem">
+                <div class="a4-emblem-circle">
+                  <span>🏛️</span>
+                </div>
+                <div class="a4-emblem-text">
+                  <span class="a4-gov-title">SISTEMA DE GESTIÓN DOCUMENTAL Y CUSTODIA</span>
+                  <span class="a4-gov-sub">BÓVEDA DIGITAL DE SEGURIDAD JURÍDICA</span>
+                </div>
+              </div>
+              <div class="a4-folio-box">
+                <span class="a4-folio-label">FOLIO ELECTRÓNICO</span>
+                <span class="a4-folio-val">VA-{{ docVisualizando.id || '2026' }}-{{ String(docVisualizando.fecha).replace(/\//g, '') }}</span>
+                <span class="a4-date-stamp">Expedición: {{ docVisualizando.fecha }}</span>
+              </div>
+            </div>
+
+            <div class="a4-divider-double"></div>
+
+            <!-- Título central del documento -->
+            <div class="a4-title-section">
+              <span class="a4-type-badge">{{ docVisualizando.tipo.toUpperCase() }}</span>
+              <h1 class="a4-main-heading">{{ docVisualizando.nombre }}</h1>
+              <span class="a4-status-declaration">DOCUMENTO REGISTRADO EN BÓVEDA CON VALIDEZ Y EFECTOS LEGALES</span>
+            </div>
+
+            <!-- Cuerpo del texto completo -->
+            <div class="a4-content-body">
+              <p v-for="(parrafo, pIdx) in (docVisualizando.texto || '').split('\n\n')" :key="pIdx" class="a4-paragraph">
+                {{ parrafo }}
+              </p>
+            </div>
+
+            <!-- Archivo digital adjunto en caso de existir -->
+            <div v-if="docVisualizando.archivo" class="a4-attached-meta">
+              <div class="a4-attached-left">
+                <span class="a4-attached-icon">📎</span>
+                <div>
+                  <span class="a4-attached-name">Archivo Digital Respaldado: {{ docVisualizando.archivo.nombre }}</span>
+                  <span class="a4-attached-source">{{ docVisualizando.archivo.origen === 'local' ? '📁 Almacenamiento Local Cifrado' : '🌐 Repositorio Remoto Vinculado' }}</span>
+                </div>
+              </div>
+              <span class="a4-hash-badge">SHA-256: 8f4a7c...39b2</span>
+            </div>
+
+            <!-- Pie de página A4 con sello digital y firmas -->
+            <div class="a4-official-footer">
+              <div class="a4-signature-box">
+                <div class="a4-signature-line"></div>
+                <span class="a4-sign-name">DIRECCIÓN GENERAL DE ARCHIVO Y CUSTODIA</span>
+                <span class="a4-sign-role">Bóveda Documental Certificada</span>
+              </div>
+
+              <!-- Sello QR / Seguridad -->
+              <div class="a4-seal-box">
+                <div class="a4-qr-mock">
+                  <div class="qr-pattern"></div>
+                  <span class="qr-text">VERIFICADO</span>
+                </div>
+                <div class="a4-seal-text">
+                  <span>SEGURIDAD CRIPTOGRÁFICA</span>
+                  <span class="text-xs text-emerald-700 font-bold">✓ DOCUMENTO AUTÉNTICO</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Pie de página final -->
+            <div class="a4-bottom-page-number">
+              <span>Página 1 de 1 • Vault Archiment Document Vault • Uso confidencial y exclusivo del titular</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- MODAL PROFESIONAL AVANZADO: EDITAR DOCUMENTO EN 3D (LOCAL/WEB Y EDITOR WORD) -->
@@ -800,9 +904,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 
-const guardados = ref(3);
+const guardados = ref(5);
 const pendientes = ref(1);
 const enviados = ref(4);
 const eliminados = ref(0);
@@ -870,6 +974,50 @@ INGENIERO DE SISTEMAS Y CIENCIAS DE LA COMPUTACIÓN
 
 Registrado en acta de grado No. 481-2025.`
   },
+  {
+    id: 4,
+    nombre: 'Contrato Laboral Indefinido',
+    tipo: 'Contrato',
+    fecha: '02/09/2025',
+    estado: 'Guardado',
+    archivo: { origen: 'local', nombre: 'Contrato_Laboral_2025.pdf', url: '' },
+    texto: `CONTRATO INDIVIDUAL DE TRABAJO A TÉRMINO INDEFINIDO
+
+Entre el empleador y el trabajador se celebra el presente contrato bajo las estipulaciones de ley vigentes, desempeñando el cargo de Líder de Desarrollo de Software.`
+  },
+  {
+    id: 5,
+    nombre: 'Certificado Bancario Davivienda',
+    tipo: 'Certificado',
+    fecha: '28/08/2025',
+    estado: 'Aprobado',
+    archivo: { origen: 'web', nombre: 'Certificado_Cuenta_Ahorros.pdf', url: 'https://davivienda.internal/docs/cert_cuenta.pdf' },
+    texto: `BANCO DAVIVIENDA S.A.
+CERTIFICACIÓN DE CUENTA BANCARIA
+
+Certificamos que el titular mantiene con nuestra institución una Cuenta de Ahorros activa y con excelente manejo comercial.`
+  },
+  {
+    id: 6,
+    nombre: 'RUT DIAN Actualizado',
+    tipo: 'Certificado',
+    fecha: '14/08/2025',
+    estado: 'Guardado',
+    archivo: { origen: 'local', nombre: 'RUT_DIAN_2025.pdf', url: '' },
+    texto: `REGISTRO ÚNICO TRIBUTARIO - DIAN
+Identificación tributaria vigente para el año fiscal 2025-2026. Actividad principal: 6201 Desarrollo de sistemas informáticos.`
+  },
+  {
+    id: 7,
+    nombre: 'Pasaporte Vigente',
+    tipo: 'Identidad',
+    fecha: '10/06/2025',
+    estado: 'Guardado',
+    archivo: { origen: 'local', nombre: 'Pasaporte_Biometrico.pdf', url: '' },
+    texto: `REPÚBLICA DE COLOMBIA - MINISTERIO DE RELACIONES EXTERIORES
+PASAPORTE ORDINARIO ELECTRÓNICO
+Válido para viajar a todos los países del mundo.`
+  }
 ]);
 
 // Filtro en tiempo real
@@ -888,12 +1036,55 @@ const documentosFiltrados = computed(() => {
   });
 });
 
+// PAGINACIÓN REACTIVA
+const paginaActual = ref(1);
+const itemsPorPagina = ref(5);
+
+const totalPaginas = computed(() => {
+  const total = Math.ceil(documentosFiltrados.value.length / itemsPorPagina.value);
+  return total > 0 ? total : 1;
+});
+
+const indiceInicio = computed(() => (paginaActual.value - 1) * itemsPorPagina.value);
+const indiceFin = computed(() => indiceInicio.value + itemsPorPagina.value);
+
+const documentosPaginados = computed(() => {
+  return documentosFiltrados.value.slice(indiceInicio.value, indiceFin.value);
+});
+
+function irAPagina(pag: number) {
+  if (pag >= 1 && pag <= totalPaginas.value) {
+    paginaActual.value = pag;
+  }
+}
+
+function cambiarItemsPorPagina() {
+  paginaActual.value = 1;
+}
+
+watch([busqueda, estadoFiltro, tipoFiltro], () => {
+  paginaActual.value = 1;
+});
+
 // Clase de color según estado
 function getStatusClass(estado: string) {
   if (estado === 'Guardado') return 'status-guardado';
   if (estado === 'Pendiente') return 'status-pendiente';
   if (estado === 'Aprobado') return 'status-aprobado';
   return '';
+}
+
+// CONTROL DE VISUALIZACIÓN EN TAMAÑO A4 COMPLETO
+const mostrarModalVisualizar = ref(false);
+const docVisualizando = ref<any>(null);
+
+function abrirVisualizar(doc: any) {
+  docVisualizando.value = doc;
+  mostrarModalVisualizar.value = true;
+}
+
+function imprimirDocumento() {
+  window.print();
 }
 
 // CONTROL DE EDICIÓN Y GESTIÓN DE ARCHIVOS / EDITOR WORD
@@ -913,8 +1104,8 @@ const docEdicion = ref({
   texto: '',
 });
 
-function abrirEditar(doc: any, index: number) {
-  docIndexEditando.value = index;
+function abrirEditar(doc: any) {
+  docIndexEditando.value = documentos.value.findIndex(d => d.id === doc.id);
   docEdicion.value = JSON.parse(JSON.stringify(doc));
   tabActiva.value = 'info';
   origenSubida.value = 'local';
@@ -987,11 +1178,17 @@ function contarPalabras(texto: string) {
 }
 
 // Control de Eliminación
-function eliminarDoc(index: number) {
-  if (confirm(`¿Estás seguro de eliminar "${documentos.value[index].nombre}"?`)) {
+function eliminarDoc(doc: any) {
+  const index = documentos.value.findIndex(d => d.id === doc.id);
+  if (index === -1) return;
+  if (confirm(`¿Estás seguro de eliminar "${doc.nombre}"?`)) {
     documentos.value.splice(index, 1);
     eliminados.value++;
-    if (guardados.value > 0) guardados.value--;
+    if (guardados.value > 0 && doc.estado === 'Guardado') guardados.value--;
+    if (pendientes.value > 0 && doc.estado === 'Pendiente') pendientes.value--;
+    if (paginaActual.value > totalPaginas.value) {
+      paginaActual.value = Math.max(1, totalPaginas.value);
+    }
   }
 }
 
@@ -1772,43 +1969,177 @@ function agregarDocumento() {
   gap: 8px;
 }
 
-.btn-action {
+/* BOTONES PROFESIONALES DE ACCIONES (SOLO ICONOS) */
+.btn-action-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
   display: inline-flex;
   align-items: center;
-  gap: 5px;
-  padding: 6px 12px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 700;
+  justify-content: center;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  padding: 0;
 }
 
-.btn-edit {
+.btn-edit-icon {
   background-color: #eff6ff;
   color: #2563eb;
   border-color: #dbeafe;
 }
 
-.btn-edit:hover {
+.btn-edit-icon:hover {
   background-color: #2563eb;
   color: white;
   border-color: #2563eb;
-  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
 }
 
-.btn-delete {
+.btn-delete-icon {
   background-color: #fef2f2;
   color: #dc2626;
   border-color: #fee2e2;
 }
 
-.btn-delete:hover {
+.btn-delete-icon:hover {
   background-color: #dc2626;
   color: white;
   border-color: #dc2626;
-  box-shadow: 0 2px 6px rgba(220, 38, 38, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(220, 38, 38, 0.25);
+}
+
+/* ========================================================
+   ESTILOS DE PAGINACIÓN PROFESIONAL
+   ======================================================== */
+.pagination-container-pro {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  background: #ffffff;
+  border-top: 1px solid #e2e8f0;
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.pagination-info {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+.pagination-highlight {
+  font-weight: 700;
+  color: #0A2A5E;
+}
+
+.pagination-size-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.size-label {
+  font-weight: 600;
+}
+
+.select-per-page {
+  padding: 5px 10px;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 6px;
+  background: #f8fafc;
+  color: #0A2A5E;
+  font-weight: 700;
+  font-size: 12.5px;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.select-per-page:focus {
+  border-color: #2563eb;
+  background: white;
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.page-numbers-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.btn-page-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 12px;
+  background: #f8fafc;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #334155;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-page-nav:hover:not(:disabled) {
+  background: #ffffff;
+  border-color: #2563eb;
+  color: #2563eb;
+  box-shadow: 0 2px 4px rgba(37, 99, 235, 0.1);
+  transform: translateY(-1px);
+}
+
+.btn-page-nav:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  background: #f1f5f9;
+}
+
+.btn-page-number {
+  min-width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-page-number:hover {
+  background: #f1f5f9;
+  border-color: #94a3b8;
+  color: #0f172a;
+}
+
+.page-active {
+  background: #0A2A5E !important;
+  color: #ffffff !important;
+  border-color: #0A2A5E !important;
+  box-shadow: 0 2px 6px rgba(10, 42, 94, 0.25);
+  font-weight: 800;
 }
 
 /* ESTADO VACÍO */
@@ -3175,6 +3506,425 @@ function agregarDocumento() {
   box-shadow: 
     0 2px 0 #14532d,
     0 3px 6px rgba(22, 163, 74, 0.3);
+}
+
+/* ========================================================
+   ESTILOS DE VISUALIZADOR DE DOCUMENTO EN FORMATO A4
+   ======================================================== */
+.btn-view-icon {
+  background-color: #ecfdf5;
+  color: #059669;
+  border-color: #a7f3d0;
+}
+
+.btn-view-icon:hover {
+  background-color: #059669;
+  color: white;
+  border-color: #059669;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(5, 150, 105, 0.25);
+}
+
+.modal-a4-backdrop {
+  z-index: 150 !important;
+  background-color: rgba(10, 25, 47, 0.85) !important;
+  backdrop-filter: blur(8px) !important;
+  padding: 16px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.a4-viewer-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 840px;
+  max-height: 94vh;
+  margin: auto;
+  animation: modalEnter 0.25s ease-out;
+}
+
+.a4-viewer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 794px;
+  padding: 12px 20px;
+  background: #0A2A5E;
+  border-radius: 14px 14px 0 0;
+  color: white;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.a4-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.a4-doc-badge {
+  background: rgba(255, 255, 255, 0.15);
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  color: #93c5fd;
+}
+
+.a4-doc-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.a4-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.btn-a4-action {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-a4-action:hover {
+  background: rgba(255, 255, 255, 0.28);
+  transform: translateY(-1px);
+}
+
+.a4-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 18px;
+  color: #cbd5e1;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.a4-close-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.a4-sheet-scroll-area {
+  width: 100%;
+  max-width: 794px;
+  display: flex;
+  justify-content: center;
+  max-height: calc(94vh - 65px);
+  overflow-y: auto;
+  padding: 24px 0 32px 0;
+  background: #334155;
+  border-radius: 0 0 14px 14px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* HOJA REAL CON MEDIDAS EXACTAS DE PROPORCIÓN A4 (1 : 1.414) */
+.a4-paper-page {
+  width: 720px;
+  min-height: 1018px;
+  background: #ffffff;
+  border-radius: 2px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.15);
+  padding: 56px 60px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #1e293b;
+  overflow: hidden;
+}
+
+.a4-watermark {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) rotate(-35deg);
+  font-size: 54px;
+  font-weight: 900;
+  color: rgba(10, 42, 94, 0.035);
+  letter-spacing: 8px;
+  pointer-events: none;
+  user-select: none;
+  z-index: 1;
+  white-space: nowrap;
+}
+
+.a4-official-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  z-index: 2;
+  margin-bottom: 16px;
+}
+
+.a4-header-emblem {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.a4-emblem-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid #0A2A5E;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  background: #f8fafc;
+}
+
+.a4-emblem-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.a4-gov-title {
+  font-size: 12px;
+  font-weight: 900;
+  color: #0A2A5E;
+  letter-spacing: 0.5px;
+}
+
+.a4-gov-sub {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: #64748b;
+}
+
+.a4-folio-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.a4-folio-label {
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #64748b;
+  letter-spacing: 0.5px;
+}
+
+.a4-folio-val {
+  font-size: 11.5px;
+  font-weight: 800;
+  color: #0A2A5E;
+  font-family: monospace;
+}
+
+.a4-date-stamp {
+  font-size: 10.5px;
+  color: #475569;
+  margin-top: 2px;
+}
+
+.a4-divider-double {
+  border-top: 3px double #cbd5e1;
+  margin-bottom: 24px;
+  z-index: 2;
+}
+
+.a4-title-section {
+  text-align: center;
+  margin-bottom: 28px;
+  z-index: 2;
+}
+
+.a4-type-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 800;
+  color: #2563eb;
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  padding: 2px 10px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.a4-main-heading {
+  font-size: 22px;
+  font-weight: 900;
+  color: #0f172a;
+  margin: 4px 0 6px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.a4-status-declaration {
+  font-size: 11px;
+  font-weight: 700;
+  color: #16a34a;
+  letter-spacing: 0.5px;
+  display: block;
+}
+
+.a4-content-body {
+  flex: 1;
+  z-index: 2;
+  line-height: 1.8;
+  font-size: 14px;
+  color: #334155;
+  margin-bottom: 28px;
+  text-align: justify;
+}
+
+.a4-paragraph {
+  margin-bottom: 14px;
+  white-space: pre-line;
+}
+
+.a4-attached-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 10px 14px;
+  margin-bottom: 24px;
+  z-index: 2;
+}
+
+.a4-attached-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.a4-attached-icon {
+  font-size: 16px;
+}
+
+.a4-attached-name {
+  font-size: 12px;
+  font-weight: 800;
+  color: #0f172a;
+  display: block;
+}
+
+.a4-attached-source {
+  font-size: 10.5px;
+  color: #64748b;
+  font-weight: 600;
+}
+
+.a4-hash-badge {
+  font-size: 10.5px;
+  font-family: monospace;
+  color: #64748b;
+  background: #e2e8f0;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.a4-official-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding-top: 20px;
+  border-top: 1px solid #e2e8f0;
+  z-index: 2;
+  margin-bottom: 20px;
+}
+
+.a4-signature-box {
+  display: flex;
+  flex-direction: column;
+  width: 260px;
+}
+
+.a4-signature-line {
+  width: 180px;
+  height: 1.5px;
+  background: #334155;
+  margin-bottom: 6px;
+}
+
+.a4-sign-name {
+  font-size: 10.5px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.a4-sign-role {
+  font-size: 10px;
+  color: #64748b;
+}
+
+.a4-seal-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border: 1.5px dashed #059669;
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #f0fdf4;
+}
+
+.a4-qr-mock {
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid #059669;
+  background: white;
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.qr-pattern {
+  width: 20px;
+  height: 20px;
+  background: repeating-linear-gradient(45deg, #059669 0px, #059669 2px, white 2px, white 4px);
+}
+
+.qr-text {
+  font-size: 5px;
+  font-weight: 900;
+  color: #059669;
+}
+
+.a4-seal-text {
+  display: flex;
+  flex-direction: column;
+  font-size: 9.5px;
+  font-weight: 800;
+  color: #065f46;
+}
+
+.a4-bottom-page-number {
+  text-align: center;
+  font-size: 10px;
+  color: #94a3b8;
+  font-weight: 500;
+  z-index: 2;
 }
 
 /* RESPONSIVE PANEL */
