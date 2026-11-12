@@ -926,8 +926,26 @@ function getBarHeight(val: number) {
   return `${px}px`;
 }
 
+interface ArchivoDoc {
+  origen: string;
+  nombre: string;
+  url?: string;
+  size?: string;
+  tipo?: string;
+}
+
+interface DocumentoItem {
+  id: number;
+  nombre: string;
+  tipo: string;
+  fecha: string;
+  estado: string;
+  archivo: ArchivoDoc;
+  texto: string;
+}
+
 // Lista de documentos reactiva con archivos y textos editables
-const documentos = ref([
+const documentos = ref<DocumentoItem[]>([
   {
     id: 1,
     nombre: 'Certificado EPS',
@@ -1121,7 +1139,7 @@ function quitarArchivo() {
 // Cargar archivo local
 function manejarArchivoLocal(e: Event) {
   const target = e.target as HTMLInputElement;
-  if (target.files && target.files.length > 0) {
+  if (target.files && target.files.length > 0 && target.files[0]) {
     const file = target.files[0];
     docEdicion.value.archivo = {
       origen: 'local',
@@ -1228,7 +1246,7 @@ function abrirModalNuevo() {
 
 function manejarArchivoNuevoLocal(e: Event) {
   const target = e.target as HTMLInputElement;
-  if (target.files && target.files.length > 0) {
+  if (target.files && target.files.length > 0 && target.files[0]) {
     const file = target.files[0];
     const sizeFormatted = file.size > 1024 * 1024
       ? (file.size / (1024 * 1024)).toFixed(2) + ' MB'

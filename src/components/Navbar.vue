@@ -190,7 +190,7 @@ const colaboradoresList = ref([
 function invitarColaborador() {
   const email = nuevoEmail.value.trim();
   if (!email || !email.includes('@')) return;
-  const username = email.split('@')[0];
+  const username = email.split('@')[0] || 'colaborador';
   const nombre = username.charAt(0).toUpperCase() + username.slice(1);
   colaboradoresList.value.push({
     nombre: nombre,

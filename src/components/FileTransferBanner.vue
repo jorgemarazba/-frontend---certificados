@@ -48,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, computed, onMounted, onUnmounted } from 'vue';
 
 // Lista de tipos de documentos que se alternan elegantemente cada minuto
 const tiposDoc = [
@@ -59,7 +59,7 @@ const tiposDoc = [
 ];
 
 const indiceDoc = ref(0);
-const tipoActual = ref(tiposDoc[0]);
+const tipoActual = computed(() => tiposDoc[indiceDoc.value] ?? tiposDoc[0]!);
 
 let timer: any = null;
 
@@ -67,7 +67,6 @@ onMounted(() => {
   // Rotar el tipo de documento cada 60 segundos en sincronía exacta con la animación
   timer = setInterval(() => {
     indiceDoc.value = (indiceDoc.value + 1) % tiposDoc.length;
-    tipoActual.value = tiposDoc[indiceDoc.value];
   }, 60000);
 });
 
